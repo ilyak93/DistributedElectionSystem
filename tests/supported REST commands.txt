@@ -1,0 +1,33 @@
+All the curl commands supported by the REST Controller in our project:
+
+@GetMapping("/votes")
+curl -X GET localhost:8081/votes
+
+@GetMapping("/votes/{clientId}")
+curl -X GET localhost:8081/votes/1
+
+@GetMapping("/count_votes_in_state")
+curl -X GET localhost:8081/count_votes_in_state
+
+@GetMapping("/count_all_votes")
+curl -X GET localhost:8081/count_all_votes
+
+@GetMapping("/single_state_party_status")
+curl -X GET localhost:8081/single_state_party_status -H "Content-Type:Application/json" -d {\"party\":\"Democrats\",\"state\":\"Texas\"}
+
+@GetMapping("/distribution")
+curl -X GET localhost:8081/distribution
+
+@GetMapping("/winner")
+curl -X GET localhost:8081/winner
+
+@PostMapping("/votes")
+curl -X POST localhost:8081/votes -H "Content-Type:Application/json" -d {\"clientId\":1,\"party\":\"Republicans\"}
+
+
+@PostMapping("/commandElections")
+curl -X POST localhost:8081/commandElections -H "Content-Type:Application/json" -d {\"command\":\"start\"}
+curl -X POST localhost:8081/commandElections -H "Content-Type:Application/json" -d {\"command\":\"end\"}
+curl -X POST localhost:8081/commandElections -H "Content-Type:Application/json" -d {\"command\":\"isfinished\"}
+curl -X POST localhost:8081/commandElections -H "Content-Type:Application/json" -d {\"command\":\"isStarted\"}
+curl -X POST localhost:8081/commandElections -H "Content-Type:Application/json" -d {\"command\":\"isEnded\"}
