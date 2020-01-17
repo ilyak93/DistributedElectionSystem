@@ -1,0 +1,73 @@
+syntax = "proto3";
+package protos;
+
+message VotePax {
+	int32 clientID = 1;
+	string party = 2;
+    string originState = 3;
+    string currentState = 4;
+    uint64 timeStamp = 5;
+	int32 sessionID = 6;
+	int32 leaderID = 7;
+}
+
+message Init {
+	int32 serverID = 1;
+    int32 sessionID = 2;
+    int32 leaderID = 3;
+    int32 voterID = 4;
+}
+
+message Prepare {
+	int32 roundNumber = 1;
+    uint64 timeStamp = 2;
+    int32 serverID = 3;
+    int32 sessionID = 4;
+    int32 leaderID = 5;
+    int32 voterID = 6;
+}
+
+message Promise {
+	int32 roundNumber = 1;
+	bool ack = 2;
+	int32 lastGoodRound =3;
+	VotePax vote = 5;
+    int32 serverID = 6;
+    int32 sessionID = 7;
+    int32 leaderID = 8;
+}
+
+message Accept {
+	int32 roundNumber = 1;
+	VotePax vote = 2;
+    int32 serverID = 3;
+    int32 sessionID = 4;
+    int32 leaderID = 5;
+}
+
+message Accepted {
+	int32 roundNumber = 1;
+	bool ack = 2;
+	VotePax vote = 4;
+    int32 serverID = 5;
+    int32 sessionID = 6;
+    int32 leaderID = 7;
+}
+
+message Session {
+	int32 sessionID = 1;
+	int32 serverID = 2;
+	int32 lastRound = 3;
+	int32 lastGoodRound = 4;
+	VotePax vote = 5;
+	bool isDecided = 6;
+	int32 leaderID = 7;
+	int32 voterID = 8;
+}
+
+
+service PaxosGreeter {
+	rpc UponReceivingInit (Init) returns (Init) {}
+    rpc UponReceivingPrepare (Prepare) returns (Promise) {}
+    rpc UponReceivingAccept (Accept) returns (Accepted) {}
+}

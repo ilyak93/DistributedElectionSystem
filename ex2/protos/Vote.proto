@@ -1,0 +1,54 @@
+syntax = "proto3";
+package protos;
+
+message VoteRequest {
+	int32 clientID = 1;
+	string party = 2;
+    string originState = 3;
+    string currentState = 4;
+    uint64 timeStamp = 5;
+}
+
+message VoteReply {
+	int32 clientID = 1;
+	string party = 2;
+    string originState = 3;
+    string currentState = 4;
+    uint64 timeStamp = 5;
+    int32 serverID = 6;
+}
+
+message StartElectionsRequest {
+	
+}
+
+message StartElectionsReply {
+
+}
+
+message EndElectionsRequest {
+	
+}
+
+message EndElectionsReply {
+
+}
+
+message VotesCountForPartyRequest {
+	string state = 1;
+	string party = 2;
+}
+
+message VotesCountForPartyReply {
+	string state = 1;
+	string party = 2;
+	int32 votesCount = 3;
+}
+
+service Greeter {
+    rpc ReceiveVote (VoteRequest) returns (VoteReply) {}
+    rpc ReceiveStartElections (StartElectionsRequest) returns (StartElectionsReply) {}
+    rpc ReceiveEndElections (EndElectionsRequest) returns (EndElectionsReply) {}
+    rpc ReceiveStatus (VotesCountForPartyRequest) returns (VotesCountForPartyReply) {}
+    rpc ReciveVotesCount (VotesCountForPartyRequest) returns ( stream VotesCountForPartyReply) {}
+}
