@@ -14,6 +14,7 @@ Run Instructions:
  3.1 open Run Configurations -> New Launch Configuration -> change Project: ex2 MainClass: app.Server
  	in Arguments -> Program argments put:
 8081 8082 8083 Texas 0 <YourRelativePath>/ex2.1/tests/states.csv <YourRelativePath>/ex2.1/tests/voters.csv
+   as 3 different ports of servers: first is the REST Server, gRPCServerPort used for any remote action which is not Paxos and the                 third port which used for Paxos communication
  
  3.2 same as for 3.1 with the following arguments:
 8084 8085 8086 Texas 1  <YourRelativePath>/ex2.1/tests/states.csv <YourRelativePath>/ex2.1/tests/voters.csv
