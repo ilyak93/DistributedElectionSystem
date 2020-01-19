@@ -14,12 +14,8 @@ public class PrepareAndPromise extends PaxosAction {
 	private Promise promise;
 		
 	public PrepareAndPromise(Prepare prepare, Session session){
-		Vote currentMapVote = VotesMap.get(prepare.getVoterID());
 		
-		if(session == null) {
-			Map sessionsMap = SessionsMap.getMap();
-			System.out.println("Got session null " + prepare.getLeaderID() + " " + prepare.getSessionID() + " " + prepare.getServerID());
-		}
+		Vote currentMapVote = VotesMap.get(prepare.getVoterID());
 		
 		if (prepare.getRoundNumber() > session.getLastRound()) {
 			
