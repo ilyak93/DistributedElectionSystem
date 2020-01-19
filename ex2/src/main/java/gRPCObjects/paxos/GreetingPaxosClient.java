@@ -76,19 +76,19 @@ public class GreetingPaxosClient {
      * */
     public Vote sendVote(Vote vote) {
     	
-    	
     	int roundNumber = 0;
     	boolean isDecided = false;
     	Vote decidedVote = vote;
     	
     	Session session = SessionsMap.createNewSession(this.serverId, this.serverId, vote.getClientId());
     	int sessionID = session.getSessionID();
+    	int leaderID = session.getLeaderID();
     	
     	Init init = Init
 				.newBuilder()
 				.setServerID(this.serverId)
 				.setSessionID(sessionID)
-				.setLeaderID(this.serverId)
+				.setLeaderID(leaderID)
 				.setVoterID(vote.getClientId())
 				.build();
     	List<OneTimeUseElement<ListenableFuture<Init>>> initFutures = new ArrayList<>();
@@ -124,7 +124,7 @@ public class GreetingPaxosClient {
     							.setTimeStamp(vote.getTimeStamp())
     							.setServerID(this.serverId)
     							.setSessionID(sessionID)
-    							.setLeaderID(this.serverId)
+    							.setLeaderID(leaderID)
     							.setVoterID(vote.getClientId())
     							.build();
     		
@@ -194,7 +194,7 @@ public class GreetingPaxosClient {
         				.setCurrentState(vote.getCurrentState())
         				.setTimeStamp(vote.getTimeStamp())
         				.setSessionID(sessionID)
-        				.setLeaderID(this.serverId)
+        				.setLeaderID(leaderID)
         				.build();
 
         		for (Promise promise : promises) {
@@ -210,7 +210,7 @@ public class GreetingPaxosClient {
         				.setVote(VoteWithMaxTimeStamp)
         				.setServerID(this.serverId)
         				.setSessionID(sessionID)
-        				.setLeaderID(this.serverId)
+        				.setLeaderID(leaderID)
         				.build();
         		
         		//Send the accept message to all the servers in the network and wait until there is an answer from a quorum.

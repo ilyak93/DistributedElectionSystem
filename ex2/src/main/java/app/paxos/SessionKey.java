@@ -2,9 +2,9 @@ package app.paxos;
 
 import java.util.Objects;
 
-public class SessionKey {
-	private int sessionId;
-	private int leaderId;
+public final class SessionKey {
+	private final int sessionId;
+	private final int leaderId;
 	
 	public SessionKey(int sessionId, int leaderId){
 		this.sessionId = sessionId;

@@ -196,7 +196,6 @@ public class VoteController {
     			GreetingClient greetingClient = new GreetingClient(originStateAddresses);
     			greetingClient .sendVoteBlocking(newVote);
     			greetingClient.shutdown();
-    			
     			synchronized(Server.sendingRemoteVoteMutex){
     				Server.sendingRemoteVoteCounter--;
     				Server.sendingRemoteVoteMutex.notifyAll();
@@ -205,7 +204,9 @@ public class VoteController {
     			System.out.println("Future interupted in @PostMapping newVote: " + e.getMessage());
     		} catch(KeeperException e) {
     			System.out.println("Zookeeper exception in @PostMapping newVote: " + e.getMessage());
-    		}
+    		} catch (Exception e) {
+				System.out.println("Caught exception " + e.getMessage());
+			}
     	}
     	else {
     		try {

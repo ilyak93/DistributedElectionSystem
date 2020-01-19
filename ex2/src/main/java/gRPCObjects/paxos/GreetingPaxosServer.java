@@ -19,6 +19,8 @@ import app.models.Vote;
 import app.paxos.AcceptAndAccepted;
 import app.paxos.InitAndSession;
 import app.paxos.SessionsMap;
+
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GreetingPaxosServer extends PaxosGreeterGrpc.PaxosGreeterImplBase {
@@ -69,7 +71,8 @@ public class GreetingPaxosServer extends PaxosGreeterGrpc.PaxosGreeterImplBase {
     	SessionKey sessionKey = new SessionKey(accept.getSessionID(), accept.getLeaderID());
     	Session session = SessionsMap.get(sessionKey);
     	AcceptAndAccepted acceptAndAccepted = new AcceptAndAccepted(accept, session);
-    	SessionsMap.remove(sessionKey);
+    	Map sessionsMap = SessionsMap.getMap();
+    	//SessionsMap.remove(sessionKey);
     	Accepted accepted = acceptAndAccepted.getAccepted();
 		Vote acceptedVote = new Vote(accepted.getVote().getClientID(),
 				 accepted.getVote().getParty(),

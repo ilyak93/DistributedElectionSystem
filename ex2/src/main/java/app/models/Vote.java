@@ -13,6 +13,7 @@ public class Vote {
     private boolean counted;
     private boolean broadcastedInState;
     private boolean valid;
+    private int serverId;
     
     public Vote(@JsonProperty(value = "clientId", required = true) int clientId,
 			@JsonProperty(value = "party", required = true) String party) {
@@ -20,10 +21,12 @@ public class Vote {
 		this.party = party;
 		this.originState = Server.clientIdToOriginState.get(clientId);
 		this.currentState = Server.state;
-		this.timeStamp = System.currentTimeMillis();
+		//this.timeStamp = System.currentTimeMillis();
+		this.timeStamp = Server.zkManager.getTime();
 		this.counted = false;
 		this.broadcastedInState = false;
 		this.valid = this.originState != null;
+		this.serverId = Server.serverId;
     }
     
     public Vote(int clientId, String party, String originState, String currentState) {
@@ -35,6 +38,7 @@ public class Vote {
 	    this.counted = false;
 	    this.broadcastedInState = false;
 	    this.valid = this.originState != null;
+	    this.serverId = Server.serverId;
     }
     
     public Vote(int clientId, String party, String originState, String currentState, long timeStamp) {
@@ -43,6 +47,10 @@ public class Vote {
 	    this.originState = originState;
 	    this.currentState = currentState;
 	    this.timeStamp = timeStamp;
+	    this.counted = false;
+	    this.broadcastedInState = false;
+	    this.valid = this.originState != null;
+	    this.serverId = Server.serverId;
     }
     
     
@@ -96,5 +104,9 @@ public class Vote {
     
     public boolean isValid() {
     	return this.valid;
+    }
+    
+    public int getServerId() {
+    	return this.serverId;
     }
 }

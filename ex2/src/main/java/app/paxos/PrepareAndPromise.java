@@ -1,5 +1,7 @@
 package app.paxos;
 
+import java.util.Map;
+
 import app.controllers.VotesMap;
 import app.models.Vote;
 import protos.Paxos.Prepare;
@@ -13,6 +15,11 @@ public class PrepareAndPromise extends PaxosAction {
 		
 	public PrepareAndPromise(Prepare prepare, Session session){
 		Vote currentMapVote = VotesMap.get(prepare.getVoterID());
+		
+		if(session == null) {
+			Map sessionsMap = SessionsMap.getMap();
+			System.out.println("Got session null " + prepare.getLeaderID() + " " + prepare.getSessionID() + " " + prepare.getServerID());
+		}
 		
 		if (prepare.getRoundNumber() > session.getLastRound()) {
 			
