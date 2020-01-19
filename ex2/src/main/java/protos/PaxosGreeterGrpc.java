@@ -108,6 +108,33 @@ public final class PaxosGreeterGrpc {
      return getUponReceivingAcceptMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<protos.Paxos.Commit,
+      protos.Paxos.Finish> getUponReceivingCommitMethod;
+
+  public static io.grpc.MethodDescriptor<protos.Paxos.Commit,
+      protos.Paxos.Finish> getUponReceivingCommitMethod() {
+    io.grpc.MethodDescriptor<protos.Paxos.Commit, protos.Paxos.Finish> getUponReceivingCommitMethod;
+    if ((getUponReceivingCommitMethod = PaxosGreeterGrpc.getUponReceivingCommitMethod) == null) {
+      synchronized (PaxosGreeterGrpc.class) {
+        if ((getUponReceivingCommitMethod = PaxosGreeterGrpc.getUponReceivingCommitMethod) == null) {
+          PaxosGreeterGrpc.getUponReceivingCommitMethod = getUponReceivingCommitMethod = 
+              io.grpc.MethodDescriptor.<protos.Paxos.Commit, protos.Paxos.Finish>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "protos.PaxosGreeter", "UponReceivingCommit"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  protos.Paxos.Commit.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  protos.Paxos.Finish.getDefaultInstance()))
+                  .setSchemaDescriptor(new PaxosGreeterMethodDescriptorSupplier("UponReceivingCommit"))
+                  .build();
+          }
+        }
+     }
+     return getUponReceivingCommitMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -156,6 +183,13 @@ public final class PaxosGreeterGrpc {
       asyncUnimplementedUnaryCall(getUponReceivingAcceptMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void uponReceivingCommit(protos.Paxos.Commit request,
+        io.grpc.stub.StreamObserver<protos.Paxos.Finish> responseObserver) {
+      asyncUnimplementedUnaryCall(getUponReceivingCommitMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -179,6 +213,13 @@ public final class PaxosGreeterGrpc {
                 protos.Paxos.Accept,
                 protos.Paxos.Accepted>(
                   this, METHODID_UPON_RECEIVING_ACCEPT)))
+          .addMethod(
+            getUponReceivingCommitMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                protos.Paxos.Commit,
+                protos.Paxos.Finish>(
+                  this, METHODID_UPON_RECEIVING_COMMIT)))
           .build();
     }
   }
@@ -224,6 +265,14 @@ public final class PaxosGreeterGrpc {
       asyncUnaryCall(
           getChannel().newCall(getUponReceivingAcceptMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void uponReceivingCommit(protos.Paxos.Commit request,
+        io.grpc.stub.StreamObserver<protos.Paxos.Finish> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getUponReceivingCommitMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -263,6 +312,13 @@ public final class PaxosGreeterGrpc {
     public protos.Paxos.Accepted uponReceivingAccept(protos.Paxos.Accept request) {
       return blockingUnaryCall(
           getChannel(), getUponReceivingAcceptMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public protos.Paxos.Finish uponReceivingCommit(protos.Paxos.Commit request) {
+      return blockingUnaryCall(
+          getChannel(), getUponReceivingCommitMethod(), getCallOptions(), request);
     }
   }
 
@@ -307,11 +363,20 @@ public final class PaxosGreeterGrpc {
       return futureUnaryCall(
           getChannel().newCall(getUponReceivingAcceptMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<protos.Paxos.Finish> uponReceivingCommit(
+        protos.Paxos.Commit request) {
+      return futureUnaryCall(
+          getChannel().newCall(getUponReceivingCommitMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_UPON_RECEIVING_INIT = 0;
   private static final int METHODID_UPON_RECEIVING_PREPARE = 1;
   private static final int METHODID_UPON_RECEIVING_ACCEPT = 2;
+  private static final int METHODID_UPON_RECEIVING_COMMIT = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -341,6 +406,10 @@ public final class PaxosGreeterGrpc {
         case METHODID_UPON_RECEIVING_ACCEPT:
           serviceImpl.uponReceivingAccept((protos.Paxos.Accept) request,
               (io.grpc.stub.StreamObserver<protos.Paxos.Accepted>) responseObserver);
+          break;
+        case METHODID_UPON_RECEIVING_COMMIT:
+          serviceImpl.uponReceivingCommit((protos.Paxos.Commit) request,
+              (io.grpc.stub.StreamObserver<protos.Paxos.Finish>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -406,6 +475,7 @@ public final class PaxosGreeterGrpc {
               .addMethod(getUponReceivingInitMethod())
               .addMethod(getUponReceivingPrepareMethod())
               .addMethod(getUponReceivingAcceptMethod())
+              .addMethod(getUponReceivingCommitMethod())
               .build();
         }
       }
