@@ -19,7 +19,7 @@ public class ZkManager extends ZkSync {
 		private String initPath = "/init";
 		private String electionsStartPath = "/electionsStart";
 		private String finishedRemoteSending = "/finishedRemoteSending";
-		private String endBroadcast;
+		private String endBroadcast = "/endBroadcast";
 		private String timePath = "/time";
 		
 		public ZkManager(String address, int port, String state, int serverIndex, String localhost, int grpcPaxosServerPort, int grpcServerPort) {
@@ -75,12 +75,10 @@ public class ZkManager extends ZkSync {
 		            System.out.println("Interrupted exception" + e.toString());
 		        }
 		        try {
-			        Stat s = zk.exists("/" + state +"/endBroadcast", false);
+			        Stat s = zk.exists(endBroadcast, false);
 		            if (s == null) {
-		            	endBroadcast = zk.create("/" + state +"/endBroadcast", new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		            	endBroadcast = zk.create(endBroadcast, new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		                System.out.println("Created node " + endBroadcast);
-		            } else {
-		            	endBroadcast = "/" + state +"/endBroadcast";
 		            }
 		        } catch (KeeperException e) {
 		            System.out.println("ZooKeeper exception: " + e.toString());
@@ -91,7 +89,7 @@ public class ZkManager extends ZkSync {
 			        Stat s = zk.exists(finishedRemoteSending, false);
 		            if (s == null) {
 		            	zk.create(finishedRemoteSending, new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-		                System.out.println("Created node " + endBroadcast);
+		                System.out.println("Created node " + finishedRemoteSending);
 		            }
 		        } catch (KeeperException e) {
 		            System.out.println("ZooKeeper exception: " + e.toString());
@@ -345,8 +343,11 @@ public class ZkManager extends ZkSync {
 	            	zk.create(endBroadcast, new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 	                System.out.println("Created node " + endBroadcast);
 	            }
-	            zk.create(endBroadcast + "/"  + serverIndex , new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-	        } catch (KeeperException e) {
+	            s = zk.exists(endBroadcast + "/" + state + serverIndex, false);
+	            if (s == null) {
+	            	zk.create(endBroadcast + "/" + state + serverIndex , new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+	            }			
+			} catch (KeeperException e) {
 	            System.out.println("ZooKeeper exception: " + e.toString());
 	        } catch (InterruptedException e) {
 	            System.out.println("Interrupted exception" + e.toString());
@@ -357,14 +358,14 @@ public class ZkManager extends ZkSync {
 			boolean ended = false;
 			try {
 				Stat endBroadcastStat = zk.exists(this.endBroadcast, false);
-				Stat upServersInStateStat =  zk.exists(this.root, false);
-				if ((endBroadcastStat == null) || (upServersInStateStat == null)) {
-					System.out.println("Cannot find the electionsStartPath node");
+				Stat allUpServersStat =  zk.exists(this.initPath, false);
+				if ((endBroadcastStat == null) || (allUpServersStat == null)) {
+					System.out.println("Cannot find the endBroadcastStat or allUpServersStat node");
 				} else {
 					System.out.println("Found the endBroadcast node");
 					List<String> endedBroadcasts = zk.getChildren(this.endBroadcast, true);
-					List<String> upServersInState = zk.getChildren(this.root, true);
-					ended = endedBroadcasts.size() == upServersInState.size();
+					List<String> allUpServers = zk.getChildren(this.initPath, true);
+					ended = endedBroadcasts.size() == allUpServers.size();
 				}
 			} catch (KeeperException e) {
 				System.out.println("ZooKeeper exception: " + e.toString());

@@ -93,6 +93,7 @@ public class GreetingPaxosServer extends PaxosGreeterGrpc.PaxosGreeterImplBase {
 			synchronized(VotesMap.mutex) {
 				try {
 					Vote currentVoteInMap = VotesMap.get(commitedVote.getClientId());
+					System.out.println(commitedVote.toString());
 					if((currentVoteInMap == null) || (commitedVote.getTimeStamp() >= currentVoteInMap.getTimeStamp())) {
 						VotesMap.put(commitedVote.getClientId(), commitedVote);
 					}

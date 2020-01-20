@@ -21,8 +21,8 @@ public class Vote {
 		this.party = party;
 		this.originState = Server.clientIdToOriginState.get(clientId);
 		this.currentState = Server.state;
-		//this.timeStamp = System.currentTimeMillis();
-		this.timeStamp = Server.zkManager.getTime();
+		this.timeStamp = System.currentTimeMillis();
+		//this.timeStamp = Server.zkManager.getTime();
 		this.counted = false;
 		this.broadcastedInState = false;
 		this.valid = this.originState != null;

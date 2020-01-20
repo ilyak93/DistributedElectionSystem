@@ -186,6 +186,8 @@ public class GreetingPaxosClient {
         		}
         	}
         	
+        	System.out.println("In Paxos Leader sessionId = " + sessionID + " leaderId = " + leaderID + " round = " + roundNumber + " from promises acksInCurrentRoundCounter = " + acksInCurrentRoundCounter);
+        	
         	// Got acks from a qurum of acceptors.
         	if(acksInCurrentRoundCounter > (double)futureStubs.size()/2) {
         		        		
@@ -255,6 +257,9 @@ public class GreetingPaxosClient {
             			acksInCurrentRoundCounter++;
             		}
             	}
+            	
+            	System.out.println("In Paxos Leader sessionId = " + sessionID + " leaderId = " + leaderID + " round = " + roundNumber + " from accepted acksInCurrentRoundCounter = " + acksInCurrentRoundCounter);
+            	
             	if(acksInCurrentRoundCounter > (double)futureStubs.size()/2) {
             		decidedVote = new Vote(VoteWithMaxTimeStamp.getClientID(),
             									VoteWithMaxTimeStamp.getParty(),

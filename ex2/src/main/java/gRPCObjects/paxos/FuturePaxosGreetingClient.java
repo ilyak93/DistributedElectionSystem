@@ -15,7 +15,7 @@ public class FuturePaxosGreetingClient {
         return executor.submit(() -> {
         	GreetingPaxosClient greetingPaxosClient = new GreetingPaxosClient(addresses, serverId);
         	Vote updatedVote = greetingPaxosClient.sendVote(vote);
-        	greetingPaxosClient.shutdown();
+        	//greetingPaxosClient.shutdown();
         	return updatedVote;
         });
     }
