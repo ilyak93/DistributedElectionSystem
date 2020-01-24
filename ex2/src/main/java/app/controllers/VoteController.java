@@ -8,6 +8,7 @@ import app.models.VotesCountKey;
 import app.models.CommandElections;
 import app.models.ControllerMessage;
 import app.models.Distribution;
+import gRPCObjects.FutureRemoteGreetingClient;
 import gRPCObjects.GreetingClient;
 import gRPCObjects.paxos.FuturePaxosGreetingClient;
 import org.apache.zookeeper.KeeperException;
@@ -102,7 +103,7 @@ public class VoteController {
     	try {
     		GreetingClient grpcEndElections = new GreetingClient(Server.zkManager.getAddressInEachState());
     		allVotesCounts = new ArrayList<>(grpcEndElections.getAllVotesCounts().values());
-    		grpcEndElections.shutdown();
+    		//grpcEndElections.shutdown();
     	} catch(InterruptedException e) {
 			System.out.println("Future interupted in countAllVotes: " + e.getMessage());
 		} catch(KeeperException e) {
@@ -119,7 +120,7 @@ public class VoteController {
     	try {
     		GreetingClient grpcStatus = new GreetingClient(Server.zkManager.getAddressInAnotherState(key.getState()));
     		status = grpcStatus.getStatus(key.getParty(), key.getState());
-    		grpcStatus.shutdown();
+    		//grpcStatus.shutdown();
     	} catch(InterruptedException e) {
 			System.out.println("Future interupted in getSingleStatePartyStatus: " + e.getMessage());
 		} catch(KeeperException e) {
@@ -137,7 +138,7 @@ public class VoteController {
     	try {
     		GreetingClient grpcDistribution = new GreetingClient(Server.zkManager.getAddressInEachState());
     		allVotesCountsMap = grpcDistribution.getAllVotesCounts();
-    		grpcDistribution.shutdown();
+    		//grpcDistribution.shutdown();
     	} catch(InterruptedException e) {
 			System.out.println("Future interupted in countAllVotes: " + e.getMessage());
 		} catch(KeeperException e) {
@@ -179,33 +180,10 @@ public class VoteController {
     		controllerMessage.setMessage("Out of elections time. Cannot receive new votes.");
     		return controllerMessage;
     	}
-    	
     	if (newVote.getOriginState().compareTo(newVote.getCurrentState()) != 0) {
-    		try {
-    			synchronized(Server.sendingRemoteVoteMutex){
-    				Server.sendingRemoteVoteCounter++;
-    				if(Server.electionsEnded) {
-    		    		controllerMessage.setMessage("Elections ended. Cannot receive new votes.");
-    		    		Server.sendingRemoteVoteCounter--;
-    		    		Server.sendingRemoteVoteMutex.notifyAll();
-    		    		return controllerMessage;
-    		    	}
-    				Server.sendingRemoteVoteMutex.notifyAll();
-    			}
-    			String originStateAddresses = Server.zkManager.getAddressInAnotherState(newVote.getOriginState());
-    			GreetingClient greetingClient = new GreetingClient(originStateAddresses);
-    			greetingClient .sendVoteBlocking(newVote);
-    			greetingClient.shutdown();
-    			
-    			synchronized(Server.sendingRemoteVoteMutex){
-    				Server.sendingRemoteVoteCounter--;
-    				Server.sendingRemoteVoteMutex.notifyAll();
-    			}
-    		} catch(InterruptedException e) {
-    			System.out.println("Future interupted in @PostMapping newVote: " + e.getMessage());
-    		} catch(KeeperException e) {
-    			System.out.println("Zookeeper exception in @PostMapping newVote: " + e.getMessage());
-    		}
+    		Future<Vote> future = new FutureRemoteGreetingClient().calculate(newVote);
+    		int voteNumber = Server.votesCounter.addAndGet(1);
+    		Server.votesInDistributionProcess.put(voteNumber, future);
     	}
     	else {
     		try {
@@ -242,7 +220,7 @@ public class VoteController {
 	    	} else {
 		    	GreetingClient grpcStartElections = new GreetingClient(Server.zkManager.getAddressesToStartElections());
 		    	grpcStartElections.startElections();
-		    	grpcStartElections.shutdown();
+		    	//grpcStartElections.shutdown();
 		    	controllerMessage.setMessage("Started elections");
 	    	}
     	}
@@ -251,7 +229,7 @@ public class VoteController {
 	    		Server.receiveNewVotes = false;
 	    		GreetingClient grpcEndElections = new GreetingClient(Server.zkManager.getAddressesToStartElections());
 	        	grpcEndElections.endElections();
-	        	grpcEndElections.shutdown();
+	        	//grpcEndElections.shutdown();
     		}
     		controllerMessage.setMessage("Endeded elections");
     	}

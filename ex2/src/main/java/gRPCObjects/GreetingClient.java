@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import com.google.common.util.concurrent.ListenableFuture;
 import gRPCObjects.interceptors.ClientInterceptorImpl;
@@ -32,32 +33,29 @@ public class GreetingClient {
 	private ManagedChannel singleBlockingChannel;
 	
 	private List<GreeterGrpc.GreeterBlockingStub>  blockingStubs;
-	private List<ManagedChannel> blockingChannels;
-	
-	private GreeterGrpc.GreeterFutureStub singleFutureStub;
-    private ManagedChannel singleFutureChannel;
     
+	private static Map<String, GreeterGrpc.GreeterBlockingStub> remoteBlockingStubs = new ConcurrentHashMap<>();
+	
     private List<GreeterGrpc.GreeterFutureStub> futureStubs;
     private List<ManagedChannel> futureChannels;
     private List<ListenableFuture<VoteReply>> sendsInProcess;
 
     public GreetingClient(String address) {
-    	String host = address.split(":")[0];
-		int port = Integer.parseInt(address.split(":")[1]);
-    	singleFutureChannel = ManagedChannelBuilder
-                .forAddress(host, port)
-                .intercept(new ClientInterceptorImpl(0))
-                .usePlaintext()
-                .build();
-    	singleFutureStub = GreeterGrpc.newFutureStub(singleFutureChannel);
-    	
-    	singleBlockingChannel = ManagedChannelBuilder
-                .forAddress(host, port)
-                .intercept(new ClientInterceptorImpl(0))
-                .usePlaintext()
-                .build();
-    	
-    	singleBlockingStub = GreeterGrpc.newBlockingStub(singleFutureChannel);
+    	GreeterGrpc.GreeterBlockingStub remoteBlockingStub = remoteBlockingStubs.get(address);
+    	if(remoteBlockingStub == null) {
+	    	String host = address.split(":")[0];
+			int port = Integer.parseInt(address.split(":")[1]);
+	    	
+	    	singleBlockingChannel = ManagedChannelBuilder
+	                .forAddress(host, port)
+	                .intercept(new ClientInterceptorImpl(0))
+	                .usePlaintext()
+	                .build();
+	    	singleBlockingStub = GreeterGrpc.newBlockingStub(singleBlockingChannel);
+	    	remoteBlockingStubs.put(address, singleBlockingStub);
+    	} else {
+    		singleBlockingStub = remoteBlockingStub;
+    	}
     	sendsInProcess = new ArrayList<>();
     	
     }
@@ -78,18 +76,23 @@ public class GreetingClient {
     		futureStubs.add(futureStub);
     	}
     	
-    	this.blockingChannels = new ArrayList<>();
     	this.blockingStubs = new ArrayList<>();
     	for (String address : addresses) {
-    		String host = address.split(":")[0];
-    		int port = Integer.parseInt(address.split(":")[1]);
-    		ManagedChannel channel = ManagedChannelBuilder
-                    .forAddress(host, port)
-                    .intercept(new ClientInterceptorImpl(0))
-                    .usePlaintext()
-                    .build();
-    		GreeterGrpc.GreeterBlockingStub blockingStub = GreeterGrpc.newBlockingStub(channel);
-    		blockingChannels.add(channel);
+    		GreeterGrpc.GreeterBlockingStub blockingStub;
+    		GreeterGrpc.GreeterBlockingStub remoteBlockingStub = remoteBlockingStubs.get(address);
+        	if(remoteBlockingStub == null) {
+	    		String host = address.split(":")[0];
+	    		int port = Integer.parseInt(address.split(":")[1]);
+	    		ManagedChannel channel = ManagedChannelBuilder
+	                    .forAddress(host, port)
+	                    .intercept(new ClientInterceptorImpl(0))
+	                    .usePlaintext()
+	                    .build();
+	    		blockingStub = GreeterGrpc.newBlockingStub(channel);
+	    		remoteBlockingStubs.put(address, blockingStub);
+        	} else {
+        		blockingStub = remoteBlockingStub;
+        	}
     		blockingStubs.add(blockingStub);
     	}
     	
@@ -99,9 +102,6 @@ public class GreetingClient {
     
     public void shutdown() {
     	try {
-	    	if(singleFutureChannel != null) {
-	    		singleFutureChannel.shutdownNow();
-	    	}
 	    	for(ManagedChannel futureChannel : futureChannels) {
 	    		if(futureChannel != null) {
 	    			futureChannel.shutdownNow();

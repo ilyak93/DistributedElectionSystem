@@ -10,6 +10,8 @@ import protos.Paxos.Prepare;
 import protos.Paxos.Promise;
 import protos.Paxos.Accept;
 import protos.Paxos.Accepted;
+import protos.Paxos.Commit;
+import protos.Paxos.Finish;
 import protos.Paxos.Init;
 import protos.Paxos.VotePax;
 import protos.PaxosGreeterGrpc;
@@ -68,6 +70,12 @@ public class GreetingPaxosClient {
     	return accepted;
     }
     
+    private OneTimeUseElement<ListenableFuture<Finish>> sendCommit(Commit commit, PaxosGreeterGrpc.PaxosGreeterFutureStub futureStub) {
+    	OneTimeUseElement<ListenableFuture<Finish>> accepted = new OneTimeUseElement<>(futureStub.uponReceivingCommit(commit));
+    	return accepted;
+    }
+    
+    
     /*
      * this function will send the vote to all the other servers in its network, using the Paxos protocol.
      * the current process is the protocol leader.
@@ -76,19 +84,20 @@ public class GreetingPaxosClient {
      * */
     public Vote sendVote(Vote vote) {
     	
-    	
     	int roundNumber = 0;
     	boolean isDecided = false;
     	Vote decidedVote = vote;
     	
     	Session session = SessionsMap.createNewSession(this.serverId, this.serverId, vote.getClientId());
+    	
     	int sessionID = session.getSessionID();
+    	int leaderID = session.getLeaderID();
     	
     	Init init = Init
 				.newBuilder()
 				.setServerID(this.serverId)
 				.setSessionID(sessionID)
-				.setLeaderID(this.serverId)
+				.setLeaderID(leaderID)
 				.setVoterID(vote.getClientId())
 				.build();
     	List<OneTimeUseElement<ListenableFuture<Init>>> initFutures = new ArrayList<>();
@@ -124,7 +133,7 @@ public class GreetingPaxosClient {
     							.setTimeStamp(vote.getTimeStamp())
     							.setServerID(this.serverId)
     							.setSessionID(sessionID)
-    							.setLeaderID(this.serverId)
+    							.setLeaderID(leaderID)
     							.setVoterID(vote.getClientId())
     							.build();
     		
@@ -177,6 +186,8 @@ public class GreetingPaxosClient {
         		}
         	}
         	
+        	System.out.println("In Paxos Leader sessionId = " + sessionID + " leaderId = " + leaderID + " round = " + roundNumber + " from promises acksInCurrentRoundCounter = " + acksInCurrentRoundCounter);
+        	
         	// Got acks from a qurum of acceptors.
         	if(acksInCurrentRoundCounter > (double)futureStubs.size()/2) {
         		        		
@@ -194,7 +205,7 @@ public class GreetingPaxosClient {
         				.setCurrentState(vote.getCurrentState())
         				.setTimeStamp(vote.getTimeStamp())
         				.setSessionID(sessionID)
-        				.setLeaderID(this.serverId)
+        				.setLeaderID(leaderID)
         				.build();
 
         		for (Promise promise : promises) {
@@ -210,7 +221,7 @@ public class GreetingPaxosClient {
         				.setVote(VoteWithMaxTimeStamp)
         				.setServerID(this.serverId)
         				.setSessionID(sessionID)
-        				.setLeaderID(this.serverId)
+        				.setLeaderID(leaderID)
         				.build();
         		
         		//Send the accept message to all the servers in the network and wait until there is an answer from a quorum.
@@ -246,13 +257,44 @@ public class GreetingPaxosClient {
             			acksInCurrentRoundCounter++;
             		}
             	}
+            	
+            	System.out.println("In Paxos Leader sessionId = " + sessionID + " leaderId = " + leaderID + " round = " + roundNumber + " from accepted acksInCurrentRoundCounter = " + acksInCurrentRoundCounter);
+            	
             	if(acksInCurrentRoundCounter > (double)futureStubs.size()/2) {
             		decidedVote = new Vote(VoteWithMaxTimeStamp.getClientID(),
             									VoteWithMaxTimeStamp.getParty(),
             									VoteWithMaxTimeStamp.getOriginState(),
             									VoteWithMaxTimeStamp.getCurrentState(),
             									VoteWithMaxTimeStamp.getTimeStamp()); 
-            		isDecided = true;
+            		
+            		// Commit the decided vote to all servers.
+            		Commit commit = Commit
+            				.newBuilder()
+            				.setSessionID(sessionID)
+            				.setLeaderID(leaderID)
+            				.setVote(VoteWithMaxTimeStamp)
+            				.build();
+            		
+            		List<OneTimeUseElement<ListenableFuture<Finish>>> finishFutures = new ArrayList<>();
+                	for (PaxosGreeterGrpc.PaxosGreeterFutureStub futureStub : futureStubs) {
+                		finishFutures.add(sendCommit(commit, futureStub));
+            		}
+                	recievedCounter = 0;
+                	//Maybe check for all live servers with the zookeeper.
+                	//wait until received finish from the acceptors servers.
+                	while(recievedCounter < futureStubs.size()) {
+                		for (OneTimeUseElement<ListenableFuture<Finish>> finishFuture : finishFutures) {
+                			if ((!finishFuture.isUsed()) && (finishFuture.getElement().isDone())) {
+                				try {
+                					finishFuture.use();
+                					recievedCounter++;
+                				} catch(Exception e) {
+                					System.out.println("Caught exception " + e.getMessage());
+                				}
+                			}
+                		}
+                	}
+                	isDecided = true;
             	}
         	}
     	}

@@ -43,16 +43,18 @@ public class Server {
 	public static int serverId;
 	public static AtomicInteger votesCounter = new AtomicInteger(0);
 	public static  ConcurrentHashMap <Integer, Future<Vote>> votesInDistributionProcess = new ConcurrentHashMap<>();
-	public static boolean electionsStarted;
-	public static boolean electionsEnded;
-	public static boolean finishedAll = false;
-	public static int sendingRemoteVoteCounter = 0;
-	public static Integer sendingRemoteVoteMutex = new Integer(-1);
-	public static boolean receiveNewVotes = true;
+	
+	public static volatile boolean electionsStarted;
+	public static volatile boolean electionsEnded;
+	public static volatile boolean finishedAll = false;
+	public static volatile int sendingRemoteVoteCounter = 0;
+	//public static volatile Integer sendingRemoteVoteMutex = new Integer(-1);
+	public static volatile Integer sendingRemoteVoteMutex = new Integer(-1);
+	public static volatile boolean receiveNewVotes = true;
 	public static String state;
 	public static Map<String, Integer> stateToElectors;
 	public static Map<Integer, String> clientIdToOriginState;
-	public static boolean choseWinner;
+	public static volatile boolean choseWinner;
 	public static String winner;
 	public static Set<String> allStates;
 	
@@ -61,7 +63,7 @@ public class Server {
 	 * @Param argv[1] = grpcServerPort
 	 * @Param argv[2] = grpcPaxosServerPort
 	 * @Param argv[3] = state
-	 * @Param argv[4] = serverIndex
+	 * @Param argv[4] = serverId
 	 * @Param argv[5] = statesFile
 	 * @param argv[6] = votersFile
 	 * */
@@ -71,7 +73,7 @@ public class Server {
 		int grpcServerPort = Integer.parseInt(argv[1]);
 		int grpcPaxosServerPort = Integer.parseInt(argv[2]);
 		state = argv[3];
-		int serverIndex = Integer.parseInt(argv[4]);
+		serverId = Integer.parseInt(argv[4]);
 		stateToElectors = new ReadStates(argv[5]).getStatesMap();
 		clientIdToOriginState = new ReadVoters(argv[6]).getVotersMap();
 		
@@ -80,7 +82,7 @@ public class Server {
 		// create the ZooKeeper manager.
 		String address = "127.0.0.1";
 		int port = 2181;
-		zkManager = new ZkManager(address, port, state, serverIndex, localhost, grpcPaxosServerPort, grpcServerPort);
+		zkManager = new ZkManager(address, port, state, serverId, localhost, grpcPaxosServerPort, grpcServerPort);
 		
 		// Upload as REST server
 		// Spring should be uploaded last.
@@ -88,19 +90,20 @@ public class Server {
 		initilaizeRestServer(restServerPort, argv);
 		
 		// Upload as gRPC server
-		GreetingServer server = initializeGrpcServer(serverIndex, grpcServerPort, state);
+		GreetingServer server = initializeGrpcServer(serverId, grpcServerPort, state);
 		
 		// Upload as gRPC Paxos server
-		GreetingPaxosServer grpcPaxosServer = initializeGreetingPaxosServer(serverIndex, grpcPaxosServerPort);
+		GreetingPaxosServer grpcPaxosServer = initializeGreetingPaxosServer(serverId, grpcPaxosServerPort);
 				
 		pollElectionsStart();
-		
+		System.out.println("Start to process future votes");
 		processFutureVotes();
-		
+		System.out.println("Finished to process future votes");
+		System.out.println("Start to broadcast");
 		broadcastAllVotesInState();
-		
+		System.out.println("Finished to broadcast");
 		finishedAll = true;
-		
+		System.out.println("getting the winner");
 		String winner = Server.getWinner();
 		System.out.println("The winner is: " + winner);
 	}
@@ -127,6 +130,7 @@ public class Server {
 	// deal with all votes that are done distributing by paxos.
 	private static void processFutureVotes() {
 		while(!electionsEnded || !zkManager.isAllFinishedRemoteSending() || !votesInDistributionProcess.isEmpty()) {
+			System.out.println("Wait for " + votesInDistributionProcess.size() + " futures");
 			//System.out.println("processFutureVotes");
 			// Returns an iterator over the elements 
 			Iterator<Entry<Integer,Future<Vote>>> iterator = votesInDistributionProcess.entrySet().iterator(); 
@@ -134,23 +138,8 @@ public class Server {
 			while (iterator.hasNext()) {
 				Entry<Integer,Future<Vote>> entryFutureVote = iterator.next();
 				if(entryFutureVote.getValue().isDone()) {
-					synchronized(VotesMap.mutex){
-						try {
-							Vote vote = entryFutureVote.getValue().get();
-							Vote currentVoteInMap = VotesMap.get(vote.getClientId());
-							if((currentVoteInMap == null) || (vote.getTimeStamp() >= currentVoteInMap.getTimeStamp())) {
-								VotesMap.put(vote.getClientId(), vote);
-							}
-							votesInDistributionProcess.remove(entryFutureVote.getKey());
-							//iterator is no longer consistent.
-							break;
-						}catch( InterruptedException | ExecutionException e) {
-							System.out.println("Got exception while handling future " + e.getMessage());
-						} catch(Exception e) {
-							
-						}
-						VotesMap.mutex.notify();
-					}
+					votesInDistributionProcess.remove(entryFutureVote.getKey());
+					break;
 				}
 			}
 		}
@@ -191,7 +180,7 @@ public class Server {
 			for (Entry<Integer,GreetingClient> grpcClient : grpcClients.entrySet()) {
 				if(grpcClient.getValue().isAllFutureSendsDone()){
 					try {
-						grpcClient.getValue().shutdown();
+						//grpcClient.getValue().shutdown();
 					} catch (Exception e) {
 						
 					}
@@ -199,6 +188,7 @@ public class Server {
 					break;
 				}
 			}
+			System.out.println("still broadcasting");
 		}
 			
 		boolean registeredEndBroadcast = false;
@@ -207,7 +197,7 @@ public class Server {
 				Server.zkManager.registerEndBroadcast();
 				registeredEndBroadcast = true;
 			}
-			//System.out.println("Wait to end broadcast");
+			System.out.println("Wait to end broadcast");
 		}
 	}
 	
@@ -221,7 +211,7 @@ public class Server {
     	try {
     		GreetingClient grpcDistribution = new GreetingClient(Server.zkManager.getAddressInEachState());
     		allVotesCountsMap = grpcDistribution.getAllVotesCounts();
-    		grpcDistribution.shutdown();
+    		//grpcDistribution.shutdown();
     	} catch(InterruptedException e) {
 			System.out.println("Future interupted in countAllVotes: " + e.getMessage());
 		} catch(KeeperException e) {

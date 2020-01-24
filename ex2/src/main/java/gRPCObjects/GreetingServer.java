@@ -67,23 +67,26 @@ public class GreetingServer extends GreeterGrpc.GreeterImplBase {
     			request.getOriginState(),
     			request.getCurrentState(),
     			request.getTimeStamp());
-        
-        boolean insertedToVotesMap = false;
-        while(!insertedToVotesMap) {
-			synchronized(VotesMap.mutex) {
-				try {
-					app.models.Vote currentMapVote = VotesMap.get(request.getClientID());
-			        if((currentMapVote == null) || (request.getTimeStamp() >= currentMapVote.getTimeStamp())) {
-						VotesMap.put(remoteVote.getClientId(), remoteVote);
-			        }
-					insertedToVotesMap = true;
-				} catch(Exception e) {
-					insertedToVotesMap = false;
+        //the vote is received as part of the broadcast after the elections ended, so it needs to get into the votes map.
+        if (app.Server.electionsEnded) {
+	        boolean insertedToVotesMap = false;
+	        while(!insertedToVotesMap) {
+				synchronized(VotesMap.mutex) {
+					try {
+						app.models.Vote currentMapVote = VotesMap.get(request.getClientID());
+						System.out.println(remoteVote.toString());
+				        if((currentMapVote == null) || (request.getTimeStamp() >= currentMapVote.getTimeStamp())) {
+							VotesMap.put(remoteVote.getClientId(), remoteVote);
+				        }
+						insertedToVotesMap = true;
+					} catch(Exception e) {
+						insertedToVotesMap = false;
+					}
+					VotesMap.mutex.notifyAll();
 				}
-				VotesMap.mutex.notifyAll();
 			}
-		}
-        if(!app.Server.electionsEnded) {
+        }
+        //if(!app.Server.electionsEnded) {
 	        if((this.state.equals(rep.getOriginState())) && (!rep.getCurrentState().equals(rep.getOriginState()))) {
 	        	try {
 	        		Future<app.models.Vote> future = new FuturePaxosGreetingClient().calculate(app.Server.zkManager.getCurrentStateAddressesForPaxos(), app.Server.serverId, remoteVote);
@@ -95,7 +98,7 @@ public class GreetingServer extends GreeterGrpc.GreeterImplBase {
 	        			System.out.println("Zookeeper exception in receiveVote remoteVote: " + e.getMessage());
 	        		}
 	        }
-        }
+        //}
         
         responseObserver.onNext(rep);
         responseObserver.onCompleted();
@@ -112,14 +115,13 @@ public class GreetingServer extends GreeterGrpc.GreeterImplBase {
     @Override
     public void receiveEndElections(EndElectionsRequest request, StreamObserver<EndElectionsReply> responseObserver) {
     	while(!app.Server.electionsEnded) {
-	    	synchronized(app.Server.sendingRemoteVoteMutex) {
-	    		if(app.Server.sendingRemoteVoteCounter == 0) {
-	    			app.Server.electionsStarted = true;
-	    			app.Server.electionsEnded = true;
-	    			app.Server.zkManager.registerFinishedRemoteSending();
-	    		}
-	    		app.Server.sendingRemoteVoteMutex.notifyAll();
-	    	}
+    		synchronized(app.Server.sendingRemoteVoteMutex) {
+    			if(app.Server.sendingRemoteVoteCounter == 0) {
+        			app.Server.electionsStarted = true;
+        			app.Server.electionsEnded = true;
+        			app.Server.zkManager.registerFinishedRemoteSending();
+        		}
+    		}
     	}
     	EndElectionsReply rep = EndElectionsReply.newBuilder().build();
     	responseObserver.onNext(rep);

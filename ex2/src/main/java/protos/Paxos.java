@@ -6190,6 +6190,1101 @@ public final class Paxos {
 
   }
 
+  public interface CommitOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.Commit)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int32 sessionID = 1;</code>
+     */
+    int getSessionID();
+
+    /**
+     * <code>int32 leaderID = 7;</code>
+     */
+    int getLeaderID();
+
+    /**
+     * <code>.protos.VotePax vote = 5;</code>
+     */
+    boolean hasVote();
+    /**
+     * <code>.protos.VotePax vote = 5;</code>
+     */
+    protos.Paxos.VotePax getVote();
+    /**
+     * <code>.protos.VotePax vote = 5;</code>
+     */
+    protos.Paxos.VotePaxOrBuilder getVoteOrBuilder();
+  }
+  /**
+   * Protobuf type {@code protos.Commit}
+   */
+  public  static final class Commit extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:protos.Commit)
+      CommitOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Commit.newBuilder() to construct.
+    private Commit(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Commit() {
+      sessionID_ = 0;
+      leaderID_ = 0;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Commit(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+
+              sessionID_ = input.readInt32();
+              break;
+            }
+            case 42: {
+              protos.Paxos.VotePax.Builder subBuilder = null;
+              if (vote_ != null) {
+                subBuilder = vote_.toBuilder();
+              }
+              vote_ = input.readMessage(protos.Paxos.VotePax.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(vote_);
+                vote_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 56: {
+
+              leaderID_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protos.Paxos.internal_static_protos_Commit_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protos.Paxos.internal_static_protos_Commit_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protos.Paxos.Commit.class, protos.Paxos.Commit.Builder.class);
+    }
+
+    public static final int SESSIONID_FIELD_NUMBER = 1;
+    private int sessionID_;
+    /**
+     * <code>int32 sessionID = 1;</code>
+     */
+    public int getSessionID() {
+      return sessionID_;
+    }
+
+    public static final int LEADERID_FIELD_NUMBER = 7;
+    private int leaderID_;
+    /**
+     * <code>int32 leaderID = 7;</code>
+     */
+    public int getLeaderID() {
+      return leaderID_;
+    }
+
+    public static final int VOTE_FIELD_NUMBER = 5;
+    private protos.Paxos.VotePax vote_;
+    /**
+     * <code>.protos.VotePax vote = 5;</code>
+     */
+    public boolean hasVote() {
+      return vote_ != null;
+    }
+    /**
+     * <code>.protos.VotePax vote = 5;</code>
+     */
+    public protos.Paxos.VotePax getVote() {
+      return vote_ == null ? protos.Paxos.VotePax.getDefaultInstance() : vote_;
+    }
+    /**
+     * <code>.protos.VotePax vote = 5;</code>
+     */
+    public protos.Paxos.VotePaxOrBuilder getVoteOrBuilder() {
+      return getVote();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (sessionID_ != 0) {
+        output.writeInt32(1, sessionID_);
+      }
+      if (vote_ != null) {
+        output.writeMessage(5, getVote());
+      }
+      if (leaderID_ != 0) {
+        output.writeInt32(7, leaderID_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (sessionID_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, sessionID_);
+      }
+      if (vote_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getVote());
+      }
+      if (leaderID_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(7, leaderID_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof protos.Paxos.Commit)) {
+        return super.equals(obj);
+      }
+      protos.Paxos.Commit other = (protos.Paxos.Commit) obj;
+
+      boolean result = true;
+      result = result && (getSessionID()
+          == other.getSessionID());
+      result = result && (getLeaderID()
+          == other.getLeaderID());
+      result = result && (hasVote() == other.hasVote());
+      if (hasVote()) {
+        result = result && getVote()
+            .equals(other.getVote());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + SESSIONID_FIELD_NUMBER;
+      hash = (53 * hash) + getSessionID();
+      hash = (37 * hash) + LEADERID_FIELD_NUMBER;
+      hash = (53 * hash) + getLeaderID();
+      if (hasVote()) {
+        hash = (37 * hash) + VOTE_FIELD_NUMBER;
+        hash = (53 * hash) + getVote().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static protos.Paxos.Commit parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protos.Paxos.Commit parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protos.Paxos.Commit parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protos.Paxos.Commit parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protos.Paxos.Commit parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protos.Paxos.Commit parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protos.Paxos.Commit parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static protos.Paxos.Commit parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static protos.Paxos.Commit parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static protos.Paxos.Commit parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static protos.Paxos.Commit parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static protos.Paxos.Commit parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(protos.Paxos.Commit prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protos.Commit}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:protos.Commit)
+        protos.Paxos.CommitOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protos.Paxos.internal_static_protos_Commit_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protos.Paxos.internal_static_protos_Commit_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protos.Paxos.Commit.class, protos.Paxos.Commit.Builder.class);
+      }
+
+      // Construct using protos.Paxos.Commit.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        sessionID_ = 0;
+
+        leaderID_ = 0;
+
+        if (voteBuilder_ == null) {
+          vote_ = null;
+        } else {
+          vote_ = null;
+          voteBuilder_ = null;
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protos.Paxos.internal_static_protos_Commit_descriptor;
+      }
+
+      public protos.Paxos.Commit getDefaultInstanceForType() {
+        return protos.Paxos.Commit.getDefaultInstance();
+      }
+
+      public protos.Paxos.Commit build() {
+        protos.Paxos.Commit result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protos.Paxos.Commit buildPartial() {
+        protos.Paxos.Commit result = new protos.Paxos.Commit(this);
+        result.sessionID_ = sessionID_;
+        result.leaderID_ = leaderID_;
+        if (voteBuilder_ == null) {
+          result.vote_ = vote_;
+        } else {
+          result.vote_ = voteBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protos.Paxos.Commit) {
+          return mergeFrom((protos.Paxos.Commit)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protos.Paxos.Commit other) {
+        if (other == protos.Paxos.Commit.getDefaultInstance()) return this;
+        if (other.getSessionID() != 0) {
+          setSessionID(other.getSessionID());
+        }
+        if (other.getLeaderID() != 0) {
+          setLeaderID(other.getLeaderID());
+        }
+        if (other.hasVote()) {
+          mergeVote(other.getVote());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protos.Paxos.Commit parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protos.Paxos.Commit) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int sessionID_ ;
+      /**
+       * <code>int32 sessionID = 1;</code>
+       */
+      public int getSessionID() {
+        return sessionID_;
+      }
+      /**
+       * <code>int32 sessionID = 1;</code>
+       */
+      public Builder setSessionID(int value) {
+        
+        sessionID_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 sessionID = 1;</code>
+       */
+      public Builder clearSessionID() {
+        
+        sessionID_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int leaderID_ ;
+      /**
+       * <code>int32 leaderID = 7;</code>
+       */
+      public int getLeaderID() {
+        return leaderID_;
+      }
+      /**
+       * <code>int32 leaderID = 7;</code>
+       */
+      public Builder setLeaderID(int value) {
+        
+        leaderID_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 leaderID = 7;</code>
+       */
+      public Builder clearLeaderID() {
+        
+        leaderID_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private protos.Paxos.VotePax vote_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          protos.Paxos.VotePax, protos.Paxos.VotePax.Builder, protos.Paxos.VotePaxOrBuilder> voteBuilder_;
+      /**
+       * <code>.protos.VotePax vote = 5;</code>
+       */
+      public boolean hasVote() {
+        return voteBuilder_ != null || vote_ != null;
+      }
+      /**
+       * <code>.protos.VotePax vote = 5;</code>
+       */
+      public protos.Paxos.VotePax getVote() {
+        if (voteBuilder_ == null) {
+          return vote_ == null ? protos.Paxos.VotePax.getDefaultInstance() : vote_;
+        } else {
+          return voteBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.protos.VotePax vote = 5;</code>
+       */
+      public Builder setVote(protos.Paxos.VotePax value) {
+        if (voteBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          vote_ = value;
+          onChanged();
+        } else {
+          voteBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.protos.VotePax vote = 5;</code>
+       */
+      public Builder setVote(
+          protos.Paxos.VotePax.Builder builderForValue) {
+        if (voteBuilder_ == null) {
+          vote_ = builderForValue.build();
+          onChanged();
+        } else {
+          voteBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.protos.VotePax vote = 5;</code>
+       */
+      public Builder mergeVote(protos.Paxos.VotePax value) {
+        if (voteBuilder_ == null) {
+          if (vote_ != null) {
+            vote_ =
+              protos.Paxos.VotePax.newBuilder(vote_).mergeFrom(value).buildPartial();
+          } else {
+            vote_ = value;
+          }
+          onChanged();
+        } else {
+          voteBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.protos.VotePax vote = 5;</code>
+       */
+      public Builder clearVote() {
+        if (voteBuilder_ == null) {
+          vote_ = null;
+          onChanged();
+        } else {
+          vote_ = null;
+          voteBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.protos.VotePax vote = 5;</code>
+       */
+      public protos.Paxos.VotePax.Builder getVoteBuilder() {
+        
+        onChanged();
+        return getVoteFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.protos.VotePax vote = 5;</code>
+       */
+      public protos.Paxos.VotePaxOrBuilder getVoteOrBuilder() {
+        if (voteBuilder_ != null) {
+          return voteBuilder_.getMessageOrBuilder();
+        } else {
+          return vote_ == null ?
+              protos.Paxos.VotePax.getDefaultInstance() : vote_;
+        }
+      }
+      /**
+       * <code>.protos.VotePax vote = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          protos.Paxos.VotePax, protos.Paxos.VotePax.Builder, protos.Paxos.VotePaxOrBuilder> 
+          getVoteFieldBuilder() {
+        if (voteBuilder_ == null) {
+          voteBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              protos.Paxos.VotePax, protos.Paxos.VotePax.Builder, protos.Paxos.VotePaxOrBuilder>(
+                  getVote(),
+                  getParentForChildren(),
+                  isClean());
+          vote_ = null;
+        }
+        return voteBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:protos.Commit)
+    }
+
+    // @@protoc_insertion_point(class_scope:protos.Commit)
+    private static final protos.Paxos.Commit DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new protos.Paxos.Commit();
+    }
+
+    public static protos.Paxos.Commit getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Commit>
+        PARSER = new com.google.protobuf.AbstractParser<Commit>() {
+      public Commit parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Commit(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Commit> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Commit> getParserForType() {
+      return PARSER;
+    }
+
+    public protos.Paxos.Commit getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface FinishOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.Finish)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code protos.Finish}
+   */
+  public  static final class Finish extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:protos.Finish)
+      FinishOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Finish.newBuilder() to construct.
+    private Finish(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Finish() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Finish(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protos.Paxos.internal_static_protos_Finish_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protos.Paxos.internal_static_protos_Finish_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protos.Paxos.Finish.class, protos.Paxos.Finish.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof protos.Paxos.Finish)) {
+        return super.equals(obj);
+      }
+      protos.Paxos.Finish other = (protos.Paxos.Finish) obj;
+
+      boolean result = true;
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static protos.Paxos.Finish parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protos.Paxos.Finish parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protos.Paxos.Finish parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protos.Paxos.Finish parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protos.Paxos.Finish parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protos.Paxos.Finish parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protos.Paxos.Finish parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static protos.Paxos.Finish parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static protos.Paxos.Finish parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static protos.Paxos.Finish parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static protos.Paxos.Finish parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static protos.Paxos.Finish parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(protos.Paxos.Finish prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protos.Finish}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:protos.Finish)
+        protos.Paxos.FinishOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protos.Paxos.internal_static_protos_Finish_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protos.Paxos.internal_static_protos_Finish_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protos.Paxos.Finish.class, protos.Paxos.Finish.Builder.class);
+      }
+
+      // Construct using protos.Paxos.Finish.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protos.Paxos.internal_static_protos_Finish_descriptor;
+      }
+
+      public protos.Paxos.Finish getDefaultInstanceForType() {
+        return protos.Paxos.Finish.getDefaultInstance();
+      }
+
+      public protos.Paxos.Finish build() {
+        protos.Paxos.Finish result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protos.Paxos.Finish buildPartial() {
+        protos.Paxos.Finish result = new protos.Paxos.Finish(this);
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protos.Paxos.Finish) {
+          return mergeFrom((protos.Paxos.Finish)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protos.Paxos.Finish other) {
+        if (other == protos.Paxos.Finish.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protos.Paxos.Finish parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protos.Paxos.Finish) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:protos.Finish)
+    }
+
+    // @@protoc_insertion_point(class_scope:protos.Finish)
+    private static final protos.Paxos.Finish DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new protos.Paxos.Finish();
+    }
+
+    public static protos.Paxos.Finish getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Finish>
+        PARSER = new com.google.protobuf.AbstractParser<Finish>() {
+      public Finish parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Finish(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Finish> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Finish> getParserForType() {
+      return PARSER;
+    }
+
+    public protos.Paxos.Finish getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_VotePax_descriptor;
   private static final 
@@ -6225,6 +7320,16 @@ public final class Paxos {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_Session_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_Commit_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_Commit_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_Finish_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_Finish_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -6257,12 +7362,16 @@ public final class Paxos {
       " \001(\005\022\020\n\010serverID\030\002 \001(\005\022\021\n\tlastRound\030\003 \001(" +
       "\005\022\025\n\rlastGoodRound\030\004 \001(\005\022\035\n\004vote\030\005 \001(\0132\017" +
       ".protos.VotePax\022\021\n\tisDecided\030\006 \001(\010\022\020\n\010le" +
-      "aderID\030\007 \001(\005\022\017\n\007voterID\030\010 \001(\0052\270\001\n\014PaxosG" +
-      "reeter\0221\n\021UponReceivingInit\022\014.protos.Ini" +
-      "t\032\014.protos.Init\"\000\022:\n\024UponReceivingPrepar" +
-      "e\022\017.protos.Prepare\032\017.protos.Promise\"\000\0229\n" +
-      "\023UponReceivingAccept\022\016.protos.Accept\032\020.p" +
-      "rotos.Accepted\"\000b\006proto3"
+      "aderID\030\007 \001(\005\022\017\n\007voterID\030\010 \001(\005\"L\n\006Commit\022" +
+      "\021\n\tsessionID\030\001 \001(\005\022\020\n\010leaderID\030\007 \001(\005\022\035\n\004" +
+      "vote\030\005 \001(\0132\017.protos.VotePax\"\010\n\006Finish2\361\001" +
+      "\n\014PaxosGreeter\0221\n\021UponReceivingInit\022\014.pr" +
+      "otos.Init\032\014.protos.Init\"\000\022:\n\024UponReceivi" +
+      "ngPrepare\022\017.protos.Prepare\032\017.protos.Prom" +
+      "ise\"\000\0229\n\023UponReceivingAccept\022\016.protos.Ac" +
+      "cept\032\020.protos.Accepted\"\000\0227\n\023UponReceivin" +
+      "gCommit\022\016.protos.Commit\032\016.protos.Finish\"" +
+      "\000b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -6318,6 +7427,18 @@ public final class Paxos {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_Session_descriptor,
         new java.lang.String[] { "SessionID", "ServerID", "LastRound", "LastGoodRound", "Vote", "IsDecided", "LeaderID", "VoterID", });
+    internal_static_protos_Commit_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_protos_Commit_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_Commit_descriptor,
+        new java.lang.String[] { "SessionID", "LeaderID", "Vote", });
+    internal_static_protos_Finish_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_protos_Finish_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_Finish_descriptor,
+        new java.lang.String[] { });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -64,10 +64,20 @@ message Session {
 	int32 leaderID = 7;
 	int32 voterID = 8;
 }
+message Commit {
+	int32 sessionID = 1;
+	int32 leaderID = 7;
+	VotePax vote = 5;
+}
+
+message Finish {
+
+}
 
 
 service PaxosGreeter {
 	rpc UponReceivingInit (Init) returns (Init) {}
     rpc UponReceivingPrepare (Prepare) returns (Promise) {}
     rpc UponReceivingAccept (Accept) returns (Accepted) {}
+    rpc UponReceivingCommit (Commit) returns (Finish) {}
 }

@@ -1,5 +1,7 @@
 package app.paxos;
 
+import java.util.Map;
+
 import app.controllers.VotesMap;
 import app.models.Vote;
 import protos.Paxos.Prepare;
@@ -12,6 +14,7 @@ public class PrepareAndPromise extends PaxosAction {
 	private Promise promise;
 		
 	public PrepareAndPromise(Prepare prepare, Session session){
+		
 		Vote currentMapVote = VotesMap.get(prepare.getVoterID());
 		
 		if (prepare.getRoundNumber() > session.getLastRound()) {
@@ -31,7 +34,7 @@ public class PrepareAndPromise extends PaxosAction {
 						.newBuilder()
 						.setSessionID(session.getSessionID())
 						.setServerID(session.getServerID())
-						.setLastRound(session.getLastRound())
+						.setLastRound(prepare.getRoundNumber())
 						.setLastGoodRound(session.getLastGoodRound())
 						.setIsDecided(session.getIsDecided())
 						.setLeaderID(session.getLeaderID())
@@ -64,7 +67,7 @@ public class PrepareAndPromise extends PaxosAction {
 						.newBuilder()
 						.setSessionID(session.getSessionID())
 						.setServerID(session.getServerID())
-						.setLastRound(session.getLastRound())
+						.setLastRound(prepare.getRoundNumber())
 						.setLastGoodRound(session.getLastGoodRound())
 						.setVote(currentMapVotePax)
 						.setIsDecided(session.getIsDecided())

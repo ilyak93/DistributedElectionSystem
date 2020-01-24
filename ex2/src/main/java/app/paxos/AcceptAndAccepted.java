@@ -13,9 +13,21 @@ public class AcceptAndAccepted extends PaxosAction{
 	
 	public AcceptAndAccepted(Accept accept, Session session){
 		
+		System.out.println("inside AcceptAndAccepted");
+		
+		System.out.println("accept vote is: " + accept.getVote().toString());
+		System.out.println("session vote is: " + session.getVote().toString());
+		
+		
 		Vote currentMapVote = VotesMap.get(accept.getVote().getClientID());
 		if(currentMapVote == null) {
+			System.out.println("currentMapVote == null");
+			System.out.println("accept.getRoundNumber() = " + accept.getRoundNumber());
+			System.out.println("session.getLastRound() = " + session.getLastRound());
 			if((accept.getRoundNumber() == session.getLastRound()) || (session.getLastRound() == 0)) {
+				
+				System.out.println("Ack is true");
+				
 				this.session = Session
 						.newBuilder()
 						.setSessionID(session.getSessionID())
@@ -36,6 +48,9 @@ public class AcceptAndAccepted extends PaxosAction{
 						.setLeaderID(session.getLeaderID())
 						.build();
 			}else {
+				
+					System.out.println("Ack is false");
+				
 					this.session = Session
 							.newBuilder()
 							.setSessionID(session.getSessionID())
@@ -55,11 +70,16 @@ public class AcceptAndAccepted extends PaxosAction{
 							.build();
 			}
 		} else {
-			
+			System.out.println("currentMapVote != null");
+			System.out.println("accept.getVote().getTimeStamp() = " + accept.getVote().getTimeStamp());
+			System.out.println("currentMapVote.getTimeStamp() = " + currentMapVote.getTimeStamp());
+			System.out.println("currentMapVote.getTimeStamp() = " + currentMapVote.getTimeStamp());
+			System.out.println("accept.getRoundNumber() = " + accept.getRoundNumber());
+			System.out.println("session.getLastRound() = " + session.getLastRound());
 			if((accept.getVote().getTimeStamp() >= currentMapVote.getTimeStamp()) && 
 					(accept.getRoundNumber() == session.getLastRound()) || (session.getLastRound() == 0)) {
 
-					
+					System.out.println("Ack is true");
 					
 					this.session = Session
 							.newBuilder()
@@ -81,6 +101,9 @@ public class AcceptAndAccepted extends PaxosAction{
 							.setLeaderID(session.getLeaderID())
 							.build();
 			}else {
+				
+				System.out.println("Ack is false");
+				
 				VotePax currentMapVotePax = VotePax
 						.newBuilder()
 						.setClientID(currentMapVote.getClientId())
